@@ -6,6 +6,6 @@ type Segment struct {
 }
 
 type UserSegment struct {
-	UserID      int
-	SegmentName []int
+	UserID    int
+	SegmentID []int
 }
