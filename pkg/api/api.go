@@ -4,14 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func StartServer() {
+type SegmentHandlerInterface interface {
+	CreateSegment(c *gin.Context)
+	// Добавьте другие методы обработчика сегментов
+}
+
+func StartServer(segmentHandler SegmentHandlerInterface) {
 	router := gin.Default()
 
-	// Создаем экземпляры обработчиков
-	segmentHandler := &handler.SegmentHandler{}
-	// userHandler := &handlers.UserHandler{} // Добавьте обработчик для пользователей
-
-	// Определяем роуты
 	api := router.Group("/api")
 	{
 		segments := api.Group("/segments")

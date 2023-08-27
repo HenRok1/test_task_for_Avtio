@@ -1,8 +1,9 @@
 package repositories
 
 import (
+	"database/sql"
+
 	"github.com/HenRok1/test_task_for_Avito/internal/entity"
-	"gorm.io/gorm"
 )
 
 type SegmentRepository interface {
@@ -10,11 +11,13 @@ type SegmentRepository interface {
 }
 
 type DefaultSegmentRepository struct {
-	DB *gorm.DB
+	DB *sql.DB
 }
 
 func (r *DefaultSegmentRepository) CreateSegment(segment *entity.Segment) (*entity.Segment, error) {
-	if err := r.DB.Create(segment).Error; err != nil {
+	query := "INSERT INTO segments (Name) VALUES ($1) RETURNING id"
+	err := r.DB.QueryRow(query, segment.Name).Scan(&segment.ID)
+	if err != nil {
 		return nil, err
 	}
 
