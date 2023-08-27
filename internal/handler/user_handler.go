@@ -52,7 +52,7 @@ func GetUserSegments(c *gin.Context) {
 	userID := c.Param("userID")
 
 	// Retrieve active segments for the user from the database
-	rows, err := db.GetDB().Query("SELECT s.id, s.slug FROM segments s INNER JOIN user_segments us ON s.id = us.segment_id WHERE us.user_id = $1", userID)
+	rows, err := db.GetDB().Query("SELECT s.id, s.name FROM segments s INNER JOIN user_segments us ON s.id = us.segment_id WHERE us.user_id = $1", userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user segments"})
 		return

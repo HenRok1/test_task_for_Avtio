@@ -16,7 +16,7 @@ func CreateSegment(c *gin.Context) {
 	}
 
 	// Insert segment into the database
-	_, err := db.GetDB().Exec("INSERT INTO segments (slug) VALUES ($1)", segment.Name)
+	_, err := db.GetDB().Exec("INSERT INTO segments (name) VALUES ($1)", segment.Name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create segment"})
 		return
@@ -26,10 +26,10 @@ func CreateSegment(c *gin.Context) {
 }
 
 func DeleteSegment(c *gin.Context) {
-	slug := c.Param("slug")
+	name := c.Param("name")
 
 	// Delete segment from the database
-	_, err := db.GetDB().Exec("DELETE FROM segments WHERE slug = $1", slug)
+	_, err := db.GetDB().Exec("DELETE FROM segments WHERE name = $1", name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete segment"})
 		return

@@ -7,5 +7,5 @@ type Segment struct {
 
 type UserSegment struct {
 	UserID      int
-	SegmentName []string
+	SegmentName []int
 }
