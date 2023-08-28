@@ -8,24 +8,39 @@ import (
 )
 
 type SegmentHandler struct {
-	SegmentService services.SegmentService
+	segmentService *services.SegmentService
+}
+
+func NewSegmentHandler(segmentService *services.SegmentService) *SegmentHandler {
+	return &SegmentHandler{
+		segmentService: segmentService,
+	}
 }
 
 func (h *SegmentHandler) CreateSegment(c *gin.Context) {
-	var input struct {
-		Name string `json:"Name"`
+	var json struct {
+		Name string `json:"name"`
 	}
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	segment, err := h.SegmentService.CreateSegment(input.Name)
+	err := h.segmentService.CreateSegment(json.Name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create segment"})
 		return
 	}
+	c.JSON(http.StatusOK, gin.H{"message": "Segment created successfully"})
+}
 
-	c.JSON(http.StatusCreated, segment)
+func (h *SegmentHandler) DeleteSegment(c *gin.Context) {
+	name := c.Param("name")
+
+	if err := h.segmentService.DeleteSegment(name); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete segment"})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Segment deleted successfully"})
 }

@@ -6,20 +6,37 @@ import (
 	"github.com/HenRok1/test_task_for_Avito/internal/entity"
 )
 
-type SegmentRepository interface {
-	CreateSegment(segment *entity.Segment) (*entity.Segment, error)
+type segmentRepository interface {
+	CreateSegment(segment *entity.Segment) error
+	DeleteSegment(name string) error
 }
 
-type DefaultSegmentRepository struct {
+type SegmentRepository struct {
 	DB *sql.DB
 }
 
-func (r *DefaultSegmentRepository) CreateSegment(segment *entity.Segment) (*entity.Segment, error) {
-	query := "INSERT INTO segments (Name) VALUES ($1) RETURNING id"
-	err := r.DB.QueryRow(query, segment.Name).Scan(&segment.ID)
-	if err != nil {
-		return nil, err
+func NewSegmentRepository(db *sql.DB) *SegmentRepository {
+	return &SegmentRepository{
+		DB: db,
 	}
-
-	return segment, nil
 }
+
+func (repo *SegmentRepository) CreateSegment(segment entity.Segment) error {
+	query := "INSERT INTO segments (name) VALUES ($1)"
+	_, err := repo.DB.Exec(query, segment.Name)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *SegmentRepository) DeleteSegment(name string) error {
+	query := "DELETE FROM segments WHERE name = $1"
+	_, err := repo.DB.Exec(query, name)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//TODO: сделать проверку для удаления, если Сегмента нет в БД, то не делать удаление

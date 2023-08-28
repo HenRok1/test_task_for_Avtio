@@ -1,22 +1,38 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/HenRok1/test_task_for_Avito/internal/entity"
 	"github.com/HenRok1/test_task_for_Avito/internal/repositories"
 )
 
-type SegmentService interface {
-	CreateSegment(name string) (*entity.Segment, error)
+// type segmentService interface {
+// 	CreateSegment(name string) error
+// 	DeleteSegment(name string) error
+// }
+
+type SegmentService struct {
+	segmentRepo *repositories.SegmentRepository
 }
 
-type DefaultSegmentService struct {
-	SegmentRepository repositories.SegmentRepository
+func NewSegmentService(segmentRepo *repositories.SegmentRepository) *SegmentService {
+	return &SegmentService{
+		segmentRepo: segmentRepo,
+	}
 }
 
-func (s *DefaultSegmentService) CreateSegment(name string) (*entity.Segment, error) {
-	segment := &entity.Segment{
-		Name: name,
+func (s *SegmentService) CreateSegment(name string) error {
+	if name == "" {
+		return errors.New("name cannot be empty")
 	}
 
-	return s.SegmentRepository.CreateSegment(segment)
+	segment := entity.Segment{
+		Name: name,
+	}
+	return s.segmentRepo.CreateSegment(segment)
+}
+
+func (s *SegmentService) DeleteSegment(name string) error {
+	return s.segmentRepo.DeleteSegment(name)
 }
