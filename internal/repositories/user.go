@@ -22,7 +22,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-func (repo *UserRepository) AddSementsToUser(userId int, segments []string) error {
+func (repo *UserRepository) AddSementsToUser(userID int, segments []string) error {
 	tx, err := repo.db.Begin()
 	if err != nil {
 		return err
@@ -37,10 +37,34 @@ func (repo *UserRepository) AddSementsToUser(userId int, segments []string) erro
 
 	for _, name := range segments {
 		query := "INSERT INTO user_segments (user_id, segment_name) VALUES ($1, $2)"
-		_, err := tx.Exec(query, userId, name)
+		_, err := tx.Exec(query, userID, name)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func (repo *UserRepository) RemoveSegmentsFromUser(userID int, segments []string) error {
+	tx, err := repo.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+			return
+		}
+		tx.Commit()
+	}()
+
+	for _, name := range segments {
+		query := "DELETE FROM user_segments WHERE user_id = $1 AND segment_name = $2"
+		_, err := tx.Exec(query, userID, name)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+
 }

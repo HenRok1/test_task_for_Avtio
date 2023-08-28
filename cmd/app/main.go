@@ -40,7 +40,8 @@ func main() {
 
 	users := router.Group("/users")
 	{
-		users.POST("/:id/:name", userHandler.AddUserSegments)
+		users.POST("/:user_id/:segment_name", userHandler.AddUserSegments)
+		users.DELETE("/:user_id/:segment_name", userHandler.RemoveUserSegments)
 	}
 
 	router.Run(":8080")

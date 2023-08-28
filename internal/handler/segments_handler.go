@@ -27,8 +27,7 @@ func (h *SegmentHandler) CreateSegment(c *gin.Context) {
 		return
 	}
 
-	err := h.segmentService.CreateSegment(json.Name)
-	if err != nil {
+	if err := h.segmentService.CreateSegment(json.Name); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create segment"})
 		return
 	}

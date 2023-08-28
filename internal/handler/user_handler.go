@@ -42,3 +42,28 @@ func (h *UserHandler) AddUserSegments(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "User segments added seccessfully"})
 }
+
+func (h *UserHandler) RemoveUserSegments(c *gin.Context) {
+	userID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	var json struct {
+		RemoveSegments []string `json:"removeSegments"`
+	}
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.userService.RemoveUserSegments(userID, json.RemoveSegments); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user segments"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User segments updated successfully"})
+
+}

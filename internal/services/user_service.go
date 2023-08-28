@@ -21,11 +21,15 @@ func NewUserService(userRepo *repositories.UserRepository) *UserService {
 }
 
 func (s *UserService) AddUserSegments(userID int, addSegments, removeSegments []string) error {
-	// for _, name := range removeSegments {
-	// 	err := s.userRepo.RemoveSegmentsFromUser(userID, []string{name})
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
+	for _, name := range removeSegments {
+		err := s.userRepo.RemoveSegmentsFromUser(userID, []string{name})
+		if err != nil {
+			return err
+		}
+	}
 	return s.userRepo.AddSementsToUser(userID, addSegments)
+}
+
+func (s *UserService) RemoveUserSegments(userID int, removeSegments []string) error {
+	return s.userRepo.RemoveSegmentsFromUser(userID, removeSegments)
 }
