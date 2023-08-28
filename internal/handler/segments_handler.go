@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/HenRok1/test_task_for_Avito/internal/services"
+	"github.com/gin-gonic/gin"
 )
 
 type SegmentHandler struct {

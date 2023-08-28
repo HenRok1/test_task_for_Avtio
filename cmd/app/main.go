@@ -10,6 +10,6 @@ func main() {
 
 	segmentHandler := &handlers.SegmentHandler{}
 
-	db.InitDB("")
+	db.InitDB("host=localhost port=5432 dbname=my_db user=postgres password=803800 sslmode=disable")
 	api.StartServer(segmentHandler)
 }
