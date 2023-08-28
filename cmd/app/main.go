@@ -22,13 +22,13 @@ func main() {
 	defer db.Close()
 
 	segmentRepo := repositories.NewSegmentRepository(db)
-	// userRepo := repositories.NewUserRepository(db)
+	userRepo := repositories.NewUserRepository(db)
 
 	segmentService := services.NewSegmentService(segmentRepo)
-	// userService := services.NewUserService(userRepo)
+	userService := services.NewUserService(userRepo)
 
 	segmentHandler := handlers.NewSegmentHandler(segmentService)
-	// userHandler := handlers.NewUserHandler(userService)
+	userHandler := handlers.NewUserHandler(userService)
 
 	router := gin.Default()
 
@@ -36,6 +36,11 @@ func main() {
 	{
 		segments.POST("/", segmentHandler.CreateSegment)
 		segments.DELETE("/:name", segmentHandler.DeleteSegment)
+	}
+
+	users := router.Group("/users")
+	{
+		users.POST("/:id/:name", userHandler.AddUserSegments)
 	}
 
 	router.Run(":8080")

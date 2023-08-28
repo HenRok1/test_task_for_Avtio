@@ -40,3 +40,4 @@ func (repo *SegmentRepository) DeleteSegment(name string) error {
 }
 
 //TODO: сделать проверку для удаления, если Сегмента нет в БД, то не делать удаление
+// А так же в service допилить функцию
