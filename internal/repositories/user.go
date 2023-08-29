@@ -7,46 +7,56 @@ import (
 )
 
 type userRepository interface {
-	AddSementsToUser(userID int, segments []string) error
+	AddSementsToUser(userID int, segments entity.UserSegment) error
 	RemoveSegmentsFromUser(userID int, segments []string) error
-	GetActiveSegments(userID int) ([]entity.Segment, error)
+	// GetActiveSegments(userID int) ([]entity.Segment, error)
 }
 
 type UserRepository struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{
-		db: db,
+		DB: db,
 	}
 }
 
-func (repo *UserRepository) AddSementsToUser(userID int, segments []string) error {
-	tx, err := repo.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-			return
-		}
-		tx.Commit()
-	}()
+func (repo *UserRepository) AddSementsToUser(userID int, segments entity.UserSegment) error {
+	// tx, err := repo.db.Begin()
+	// if err != nil {
+	// 	return err
+	// }
+	// // defer func() {
+	// // 	if err != nil {
+	// // 		tx.Rollback()
+	// // 		return
+	// // 	}
+	// // 	tx.Commit()
+	// // }()
 
-	for _, name := range segments {
+	// for _, name := range segments {
+	// 	query := "INSERT INTO user_segments (user_id, segment_name) VALUES ($1, $2)"
+	// 	_, err := tx.Exec(query, userID, name)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
+	// return nil
+
+	for _, name := range segments.SegmentName {
 		query := "INSERT INTO user_segments (user_id, segment_name) VALUES ($1, $2)"
-		_, err := tx.Exec(query, userID, name)
+		_, err := repo.DB.Exec(query, userID, name)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+
 }
 
 func (repo *UserRepository) RemoveSegmentsFromUser(userID int, segments []string) error {
-	tx, err := repo.db.Begin()
+	tx, err := repo.DB.Begin()
 	if err != nil {
 		return err
 	}

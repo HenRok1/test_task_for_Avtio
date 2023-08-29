@@ -9,7 +9,7 @@ import (
 	handlers "github.com/HenRok1/test_task_for_Avito/internal/handler"
 	"github.com/HenRok1/test_task_for_Avito/internal/repositories"
 	"github.com/HenRok1/test_task_for_Avito/internal/services"
-	"github.com/gin-gonic/gin"
+	"github.com/HenRok1/test_task_for_Avito/pkg/api"
 )
 
 func main() {
@@ -30,19 +30,21 @@ func main() {
 	segmentHandler := handlers.NewSegmentHandler(segmentService)
 	userHandler := handlers.NewUserHandler(userService)
 
-	router := gin.Default()
+	api.StartServer(segmentHandler, userHandler)
 
-	segments := router.Group("/segments")
-	{
-		segments.POST("/", segmentHandler.CreateSegment)
-		segments.DELETE("/:name", segmentHandler.DeleteSegment)
-	}
+	// router := gin.Default()
 
-	users := router.Group("/users")
-	{
-		users.POST("/:user_id/:segment_name", userHandler.AddUserSegments)
-		users.DELETE("/:user_id/:segment_name", userHandler.RemoveUserSegments)
-	}
+	// segments := router.Group("/segments")
+	// {
+	// 	segments.POST("/", segmentHandler.CreateSegment)
+	// 	segments.DELETE("/:name", segmentHandler.DeleteSegment)
+	// }
 
-	router.Run(":8080")
+	// users := router.Group("/users")
+	// {
+	// 	users.POST("/:user_id/:segment_name", userHandler.AddUserSegments)
+	// 	users.DELETE("/:user_id/:segment_name", userHandler.RemoveUserSegments)
+	// }
+
+	// router.Run(":8080")
 }

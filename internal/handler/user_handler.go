@@ -8,6 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type UserHandlerInterface interface {
+	AddUserSegments(c *gin.Context)
+	RemoveUserSegments(c *gin.Context)
+}
+
 type UserHandler struct {
 	userService *services.UserService
 }
@@ -19,15 +24,15 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 }
 
 func (h *UserHandler) AddUserSegments(c *gin.Context) {
-	userID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
+	// userID, err := strconv.Atoi(c.Param("user_id"))
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+	// 	return
+	// }
 
 	var json struct {
-		AddSegments    []string `json:"addSegments"`
-		RemoveSegments []string `json:"removeSegments"`
+		userID       int      `json:"id"`
+		segment_name []string `json:"segment_name"`
 	}
 
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -35,7 +40,7 @@ func (h *UserHandler) AddUserSegments(c *gin.Context) {
 		return
 	}
 
-	if err := h.userService.AddUserSegments(userID, json.AddSegments, json.RemoveSegments); err != nil {
+	if err := h.userService.AddUserSegments(json.userID, json.segment_name); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user segments"})
 		return
 	}

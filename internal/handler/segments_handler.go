@@ -7,6 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type SegmentHandlerInterface interface {
+	CreateSegment(c *gin.Context)
+	DeleteSegment(c *gin.Context)
+}
+
 type SegmentHandler struct {
 	segmentService *services.SegmentService
 }

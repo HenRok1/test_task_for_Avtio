@@ -5,10 +5,10 @@ import (
 	"github.com/HenRok1/test_task_for_Avito/internal/repositories"
 )
 
-type userService interface {
-	AddUserSegments(userID int, addSegments, removeSegments []string) error
-	GetActiveUserSegments(userID int) ([]entity.Segment, error)
-}
+// type userService interface {
+// 	AddUserSegments(userID int, segment_name []string) error
+// 	GetActiveUserSegments(userID int) ([]entity.Segment, error)
+// }
 
 type UserService struct {
 	userRepo *repositories.UserRepository
@@ -20,14 +20,20 @@ func NewUserService(userRepo *repositories.UserRepository) *UserService {
 	}
 }
 
-func (s *UserService) AddUserSegments(userID int, addSegments, removeSegments []string) error {
-	for _, name := range removeSegments {
-		err := s.userRepo.RemoveSegmentsFromUser(userID, []string{name})
-		if err != nil {
-			return err
-		}
+func (s *UserService) AddUserSegments(userID int, segment_name []string) error {
+	// for _, name := range removeSegments {
+	// 	err := s.userRepo.RemoveSegmentsFromUser(userID, []string{name})
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
+
+	name := entity.UserSegment{
+		UserID:      userID,
+		SegmentName: segment_name,
 	}
-	return s.userRepo.AddSementsToUser(userID, addSegments)
+
+	return s.userRepo.AddSementsToUser(userID, name)
 }
 
 func (s *UserService) RemoveUserSegments(userID int, removeSegments []string) error {
